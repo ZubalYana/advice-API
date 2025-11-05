@@ -2,7 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
-import adviceRoutes from './routes/adviceRoutes';
+import adviceRoutes from './routes/AdviceRoutes';
 
 const app = express();
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
