@@ -3,6 +3,8 @@ import express from "express";
 
 const router = express.Router();
 
+//proper shwagger docs to be added later for frontend devs
+
 router.post('/', async (req, res) => {
     try {
         const { type, title, text, authorId } = req.body;
@@ -48,4 +50,16 @@ router.get('/:id', async (req, res) => {
     }
 })
 
+//an endpoint for user to delete the advice he'd created
+//to be optimized after user auth is set up
+router.delete('/:id', async (req, res) => {
+    try {
+        const advice = await Advice.findByIdAndDelete(req.params.id);
+        res.status(200).json(advice);
+    }
+    catch (err) {
+        console.log('Error deleting advice:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+})
 export default router;
