@@ -62,4 +62,16 @@ router.delete('/:id', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 })
+
+//to be optimized after user auth is set up
+router.put('/:id', async (req, res) => {
+    try {
+        const advice = await Advice.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.status(200).json(advice);
+    }
+    catch (err) {
+        console.log('Error updating advice:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+})
 export default router;
