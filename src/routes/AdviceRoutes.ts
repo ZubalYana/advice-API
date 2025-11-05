@@ -37,4 +37,15 @@ router.get('/', async (req, res) => {
     }
 })
 
+router.get('/:id', async (req, res) => {
+    try {
+        const advice = await Advice.findById(req.params.id);
+        res.status(200).json(advice);
+    }
+    catch (err) {
+        console.log('Error getting advice:', err);
+        res.status(500).json({ message: "Server error" });
+    }
+})
+
 export default router;
