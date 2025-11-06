@@ -71,15 +71,30 @@ router.delete('/:id', authMiddleware, async (req, res) => {
     }
 })
 
-//to be optimized after user auth is set up
 router.put('/:id', authMiddleware, async (req, res) => {
     try {
-        const advice = await Advice.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        res.status(200).json(advice);
+        const advice = await Advice.findById(req.params.id);
+
+        if (!advice) {
+            return res.status(404).json({ message: "Advice not found" });
+        }
+
+        if (advice.authorId.toString() !== req.user?.userId && req.user?.role !== "admin") {
+            return res.status(403).json({ message: 'Not authorized to edit' })
+        }
+
+        const updatedAdvice = await Advice.findOneAndUpdate(
+            { _id: req.params.id },
+            req.body,
+            { new: true }
+        );
+
+        res.status(200).json(updatedAdvice);
     }
     catch (err) {
         console.log('Error updating advice:', err);
         res.status(500).json({ message: 'Server error' });
     }
 })
+
 export default router;
