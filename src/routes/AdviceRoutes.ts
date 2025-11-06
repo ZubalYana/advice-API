@@ -1,11 +1,11 @@
 import Advice from "../schemas/Advice";
 import express from "express";
-
+import { authMiddleware } from "../middleware/authMiddleware";
 const router = express.Router();
 
 //proper shwagger docs to be added later for frontend devs
 
-router.post('/', async (req, res) => {
+router.post('/', authMiddleware, async (req, res) => {
     try {
         const { type, title, text, authorId } = req.body;
         if (!title || !text) {
@@ -16,7 +16,7 @@ router.post('/', async (req, res) => {
             type: type ?? "Other",
             title: title,
             text: text,
-            authorId: authorId ?? "Anonymous"
+            authorId: req.user?.userId
         });
 
         const savedAdvice = await newAdvice.save();
@@ -50,11 +50,19 @@ router.get('/:id', async (req, res) => {
     }
 })
 
-//an endpoint for user to delete the advice he'd created
-//to be optimized after user auth is set up
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authMiddleware, async (req, res) => {
     try {
         const advice = await Advice.findByIdAndDelete(req.params.id);
+
+        if (!advice) {
+            return res.status(404).json({ message: "Advice not found" });
+        }
+
+        if (advice.authorId.toString() !== req.user?.userId && req.user?.role !== "admin") {
+            return res.status(403).json({ message: "Not authorized to delete this advice" });
+        }
+
+        await advice.deleteOne();
         res.status(200).json(advice);
     }
     catch (err) {
