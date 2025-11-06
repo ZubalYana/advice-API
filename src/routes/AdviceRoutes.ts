@@ -52,7 +52,7 @@ router.get('/:id', async (req, res) => {
 
 router.delete('/:id', authMiddleware, async (req, res) => {
     try {
-        const advice = await Advice.findByIdAndDelete(req.params.id);
+        const advice = await Advice.findById(req.params.id);
 
         if (!advice) {
             return res.status(404).json({ message: "Advice not found" });
@@ -72,7 +72,7 @@ router.delete('/:id', authMiddleware, async (req, res) => {
 })
 
 //to be optimized after user auth is set up
-router.put('/:id', async (req, res) => {
+router.put('/:id', authMiddleware, async (req, res) => {
     try {
         const advice = await Advice.findByIdAndUpdate(req.params.id, req.body, { new: true });
         res.status(200).json(advice);
