@@ -7,6 +7,40 @@ import dotenv from "dotenv";
 dotenv.config();
 const router = express.Router();
 
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: John Doe
+ *               email:
+ *                 type: string
+ *                 example: test@example.com
+ *               password:
+ *                 type: string
+ *                 example: 123456
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *       400:
+ *         description: Validation error
+ *       500:
+ *         description: Server error
+ */
 router.post('/register', async (req, res) => {
     try {
         const { name, email, password } = req.body;
@@ -34,6 +68,38 @@ router.post('/register', async (req, res) => {
     }
 })
 
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     summary: Login a user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: test@example.com
+ *               password:
+ *                 type: string
+ *                 example: 123456
+ *     responses:
+ *       200:
+ *         description: Logged in successfully
+ *       401:
+ *         description: Invalid password
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Server error
+ */
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;

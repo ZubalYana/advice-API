@@ -5,7 +5,10 @@ dotenv.config();
 import adviceRoutes from './routes/AdviceRoutes';
 import authRoutes from './routes/AuthRoutes';
 import adminRoutes from './routes/AdminRoutes';
+import { setupSwagger } from "./swagger";
+
 const app = express();
+setupSwagger(app);
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
 
 mongoose.connect(process.env.MONGO_URI ?? '')
