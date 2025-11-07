@@ -3,8 +3,6 @@ import express from "express";
 import { authMiddleware } from "../middleware/authMiddleware";
 const router = express.Router();
 
-//proper shwagger docs to be added later for frontend devs
-
 router.post('/', authMiddleware, async (req, res) => {
     try {
         const { type, title, text, authorId } = req.body;
@@ -30,7 +28,8 @@ router.post('/', authMiddleware, async (req, res) => {
 
 router.get('/', async (req, res) => {
     try {
-        const advice = await Advice.find();
+        const filter = req.user?.role === "admin" ? {} : { verified: true };
+        const advice = await Advice.find(filter);
         res.status(200).json(advice);
     }
     catch (err) {
