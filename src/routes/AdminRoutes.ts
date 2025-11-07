@@ -3,7 +3,7 @@ import express from "express";
 import { authMiddleware } from "../middleware/authMiddleware";
 const router = express.Router();
 
-router.put('/verify-advice', authMiddleware, async (req, res) => {
+router.put('/:id/verify', authMiddleware, async (req, res) => {
     try {
         const { adviceId } = req.body;
 

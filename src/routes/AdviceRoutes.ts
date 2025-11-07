@@ -38,6 +38,11 @@ router.get('/', async (req, res) => {
     }
 })
 
+router.get('/my', authMiddleware, async (req, res) => {
+    const advice = await Advice.find({ authorId: req.user?.userId });
+    res.json(advice);
+})
+
 router.get('/:id', async (req, res) => {
     try {
         const advice = await Advice.findById(req.params.id);
