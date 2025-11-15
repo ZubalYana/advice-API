@@ -252,4 +252,52 @@ router.put('/:id', authMiddleware, async (req, res) => {
     }
 })
 
+/**
+ * @swagger
+ * /advice/random:
+ *   get:
+ *     summary: Get random advice
+ *     tags: [Advice]
+ *     responses:
+ *       200:
+ *         description: Random advice retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                   description: The unique ID of the advice
+ *                 text:
+ *                   type: string
+ *                   description: The advice text
+ *             example:
+ *               _id: "64f9b1e4f1c2ab0012345678"
+ *               text: "Always stay positive."
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Error message
+ *             example:
+ *               message: "Server error"
+ */
+router.get('/random', async (req, res) => {
+    try {
+        const advice = await Advice.aggregate().sample(1);
+        res.status(200).json(advice);
+    }
+    catch (err) {
+        console.log('Error getting random advice:', err)
+        res.status(500).json({ message: 'Server error' })
+    }
+})
+
+
 export default router;
