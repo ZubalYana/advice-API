@@ -20,9 +20,9 @@ mongoose.connect(process.env.MONGO_URI ?? '')
     })
 
 app.use(express.json());
-app.use('/api/advice', adviceRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/admin', adminRoutes);
+app.use('/advice', adviceRoutes);
+app.use('/auth', authRoutes);
+app.use('/admin', adminRoutes);
 
 app.get("/", (_req, res) => {
     res.json({ message: "TypeScript + Express server here" });
