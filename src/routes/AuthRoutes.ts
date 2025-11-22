@@ -52,21 +52,30 @@ router.post('/register', async (req, res) => {
         if (existing) return res.status(400).json({ message: "Email already exists" });
 
         const hashedPassword = await bcrypt.hash(password, 10);
+
         const newUser = new User({
-            name: name,
-            email: email,
+            name,
+            email,
             password: hashedPassword,
-            role: "user"
+            role: "user",
         });
 
-        const savedUser = await newUser.save();
-        res.status(201).json(savedUser);
+        await newUser.save();
+
+        const token = jwt.sign(
+            { userId: newUser._id, role: newUser.role },
+            process.env.JWT_SECRET || "default_secret",
+            { expiresIn: "1d" }
+        );
+
+        res.status(201).json({ token });
+
+    } catch (err) {
+        console.log("Error registering user:", err);
+        res.status(500).json({ message: "Server error" });
     }
-    catch (err) {
-        console.log('Error registering user:', err);
-        res.status(500).json({ message: 'Server error' });
-    }
-})
+});
+
 
 /**
  * @swagger
